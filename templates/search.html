@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+        <a class="navbar-brand" href="#">Quora Search</a>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <form class="d-flex" action="/search">
+                <input class="form-control me-2" type="text" placeholder="Search" name="query_text" aria-label="Search" required>
+                <input class="form-control me-2" type="number" placeholder="Number of results" min="1" name="n" aria-label="Results">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">Engine</a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdown01">
+                            <li><button class="dropdown-item" type="radio" name="engine" value="tf-idf">TF-IDF</button></li>
+                            <li><button class="dropdown-item" type="radio" name="engine" value="fasttext">fasttext</button></li>
+                        </ul>
+                    </li>
+                </ul>
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+</header>
+
+<main role="main" class="flex-shrink-0 mt-5 pt-5">
+    <div class="container">
+        {% if exception %}
+            <h2>Произошла ошибка. Проверьте логи для подробностей.</h2>
+        {% elif not engine or not text %}
+            <h2>Введите запрос для поиска.</h2>
+        {% elif not metrics %}
+            <h3>Ничего не найдено для "{{ text }}" в {{ engine }}.</h3>
+        {% else %}
+            <h3>Топ-{{ n }} результатов для "{{ text }}" в {{ engine }}.</h3>
+            <p class="time-info">Time taken for search: {{ duration }} seconds</p>
+            {% for i in range(n) %}
+            <div class="row mb-3">
+                <div class="col-md-1 themed-grid-col">{{ i + 1 }}</div>
+                <div class="col-md-2 themed-grid-col">{{ metrics[i][0] }}</div>
+                <div class="col-md-6 themed-grid-col">{{ metrics[i][1] }}</div>
+                <div class="col-md-3 themed-grid-col">
+                    <!-- Лайк -->
+                    <form method="POST" action="/like" style="display: inline;">
+                        <input type="hidden" name="user_id" value="1"> <!-- ID пользователя -->
+                        <input type="hidden" name="news_id" value="{{ i + 1 }}"> <!-- Ранк как news_id -->
+                        <button class="btn btn-sm btn-primary" type="submit">👍 Лайк</button>
+                    </form>
+                    <!-- Закладка -->
+                    <form method="POST" action="/bookmark" style="display: inline;">
+                        <input type="hidden" name="user_id" value="1"> <!-- ID пользователя -->
+                        <input type="hidden" name="news_id" value="{{ i + 1 }}"> <!-- Ранк как news_id -->
+                        <button class="btn btn-sm btn-warning" type="submit">📑 Закладка</button>
+                    </form>
+                    <!-- Комментарий -->
+                    <form method="POST" action="/comment" style="display: inline;">
+                        <input type="hidden" name="user_id" value="1"> <!-- ID пользователя -->
+                        <input type="hidden" name="news_id" value="{{ i + 1 }}"> <!-- Ранк как news_id -->
+                        <textarea name="text" placeholder="Комментарий" class="form-control form-control-sm" style="display: inline-block; width: auto;"></textarea>
+                        <button class="btn btn-sm btn-secondary" type="submit">💬 Коммент</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</main>
+{% endblock %}
