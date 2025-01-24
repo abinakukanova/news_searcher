@@ -22,7 +22,7 @@
 
 Модель FastText была скачена [отсюда](https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.ru.300.bin.gz). Модель не была загружена в репозиторий, поэтому необходимо скачать. 
 
-Данные `ria-2023.csv` были скачаны путем краулинга с новостного агенства РИА Новости. Файл большой, поэтому скачивание доступно по этой [ссылке](https://drive.google.com/file/d/13VCQ_e31I0MWp4Q58pywU6-GT6oz9cKA/view?usp=sharing)
+Данные `ria-2023.csv` были скачаны путем краулинга с новостного агенства РИА Новости. Файл большой, поэтому скачивание доступно по этой [ссылке](https://drive.google.com/file/d/11hWxJcawybKaQejx8QFCVCLEP8tJErH7/view?usp=sharing)
 
 Файлы `fasttext_index_matrix.pickle` и `tfidf_index_matrix.pickle` создаются при запуске приложения, если их нет. 
 
